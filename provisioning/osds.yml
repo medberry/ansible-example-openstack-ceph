@@ -31,7 +31,7 @@
       os_server:
         auth: "{{ os_auth }}"
         name: ceph-osd-{{ item }}
-        auto_ip: no
+        auto_ip: "{{ os_use_public_IP }}"
         image: "{{ os_image }}"
         flavor: "{{ os_flavor }}"
         key_name: "{{ os_key_pair }}"
@@ -54,7 +54,7 @@
       os_server:
         auth: "{{ os_auth }}"
         name: ceph-osd-{{ item }}
-        auto_ip: no
+        auto_ip: "{{ os_use_public_IP }}"
         image: "{{ os_image }}"
         flavor: "{{ os_flavor }}"
         key_name: "{{ os_key_pair }}"
@@ -74,10 +74,18 @@
       debug:
         var: ceph_osd_compute_instances.results
 
-    - name: Add all provisioned OSD instances to inventory
+    - name: Add all provisioned monitor instances with public IP to inventory
       add_host:
-        name: "{{ item.1.openstack.name }}"
+        name: "{{ item['openstack']['name'] }}"
         groups: ceph,"{{ osd_group_name }}"
-        ansible_host: "{{ item.1.openstack.private_v4 }}"
-      changed_when: false
-      with_indexed_items: ceph_osd_compute_instances.results
+        ansible_host: "{{ item['openstack']['public_v4'] }}"
+      with_items: "{{ ceph_mon_compute_instances.results }}"
+      when: "{{ os_use_public_IP }}"
+
+    - name: Add all provisioned monitor instances with private IP to inventory
+      add_host:
+        name: "{{ item['openstack']['name'] }}"
+        groups: ceph,"{{ osd_group_name }}"
+        ansible_host: "{{ item['openstack']['private_v4'] }}"
+      with_items: "{{ ceph_mon_compute_instances.results }}"
+      when: not "{{ os_use_public_IP }}"

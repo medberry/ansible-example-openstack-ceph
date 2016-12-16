@@ -8,6 +8,8 @@ os_network_cidr: 10.12.48.0/24
 os_key_pair: tcross
 
 os_build_delay: 20
+# Use public IP to connect to instances from Tower
+os_use_public_IP: true
 
 os_auth:
   project_name: "{{ lookup('env', 'OS_PROJECT') }}"
