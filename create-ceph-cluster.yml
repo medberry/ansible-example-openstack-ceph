@@ -29,6 +29,7 @@
         - OS_PROJECT
 
 - include: provisioning/common.yml
+  tags: setup-openstack
 - include: provisioning/osds.yml
 - include: provisioning/mons.yml
 

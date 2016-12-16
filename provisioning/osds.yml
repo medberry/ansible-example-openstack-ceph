@@ -70,7 +70,7 @@
       with_sequence: start=0 end={{ osd_count - 1 }} stride=1
       register: ceph_osd_compute_instances
 
-    - name: Add all provisioned monitor instances with public IP to inventory
+    - name: Add all provisioned OSD instances with public IP to inventory
       add_host:
         name: "{{ item['openstack']['name'] }}"
         groups: "ceph,{{ osd_group_name }}"
@@ -78,7 +78,7 @@
       with_items: "{{ ceph_osd_compute_instances.results }}"
       when: "{{ os_use_public_IP }}"
 
-    - name: Add all provisioned monitor instances with private IP to inventory
+    - name: Add all provisioned OSD instances with private IP to inventory
       add_host:
         name: "{{ item['openstack']['name'] }}"
         groups: ceph,"{{ osd_group_name }}"
