@@ -48,7 +48,7 @@
     - name: Add all provisioned monitor instances to inventory
       add_host:
         name: "{{ item.1.openstack.name }}"
-        groups: ceph,{{ mon_group_name }}
+        groups: ceph,"{{ mon_group_name }}"
         ansible_host: "{{ item.1.openstack.private_v4 }}"
       changed_when: false
       with_indexed_items: ceph_mon_compute_instances.results
