@@ -31,7 +31,7 @@
       os_server:
         auth: "{{ os_auth }}"
         name: ceph-osd-{{ item }}
-        auto_ip: no
+        auto_ip: "{{ os_use_public_IP }}"
         image: "{{ os_image }}"
         flavor: "{{ os_flavor }}"
         key_name: "{{ os_key_pair }}"
@@ -48,13 +48,13 @@
 
     - name: Wait a little while for instances to get out of BUILD state
       pause:
-        seconds: 20
+        seconds: "{{ os_build_delay }}"
 
     - name: Wait for all OSD compute instances to be ready
       os_server:
         auth: "{{ os_auth }}"
         name: ceph-osd-{{ item }}
-        auto_ip: no
+        auto_ip: "{{ os_use_public_IP }}"
         image: "{{ os_image }}"
         flavor: "{{ os_flavor }}"
         key_name: "{{ os_key_pair }}"
@@ -70,10 +70,18 @@
       with_sequence: start=0 end={{ osd_count - 1 }} stride=1
       register: ceph_osd_compute_instances
 
-    - name: Add all provisioned OSD instances to inventory
+    - name: Add all provisioned OSD instances with public IP to inventory
       add_host:
-        name: "{{ item.1.openstack.name }}"
-        groups: ceph,cephosds
-        ansible_host: "{{ item.1.openstack.private_v4 }}"
-      changed_when: false
-      with_indexed_items: ceph_osd_compute_instances.results
+        name: "{{ item['openstack']['name'] }}"
+        groups: "ceph,{{ osd_group_name }}"
+        ansible_host: "{{ item['openstack']['public_v4'] }}"
+      with_items: "{{ ceph_osd_compute_instances.results }}"
+      when: os_use_public_IP
+
+    - name: Add all provisioned OSD instances with private IP to inventory
+      add_host:
+        name: "{{ item['openstack']['name'] }}"
+        groups: "ceph,{{ osd_group_name }}"
+        ansible_host: "{{ item['openstack']['private_v4'] }}"
+      with_items: "{{ ceph_osd_compute_instances.results }}"
+      when: not os_use_public_IP
