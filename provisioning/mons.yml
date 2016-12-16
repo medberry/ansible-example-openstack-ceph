@@ -60,3 +60,11 @@
         ansible_host: "{{ item['openstack']['private_v4'] }}"
       with_items: "{{ ceph_mon_compute_instances.results }}"
       when: not "{{ os_use_public_IP }}"
+
+    - name: show all the hosts in the mon_group_name group
+      debug: msg={{ item }}
+      with_items: "{{ groups['mon_group_name'] }}"
+
+    - show all the hosts in the osd_group_name group
+      debug: msg={{ item }}
+      with_items: "{{ groups['osd_group_name'] }}"
