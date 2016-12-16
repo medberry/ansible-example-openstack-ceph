@@ -79,7 +79,7 @@
         name: "{{ item['openstack']['name'] }}"
         groups: ceph,"{{ osd_group_name }}"
         ansible_host: "{{ item['openstack']['public_v4'] }}"
-      with_items: "{{ ceph_mon_compute_instances.results }}"
+      with_items: "{{ ceph_osd_compute_instances.results }}"
       when: "{{ os_use_public_IP }}"
 
     - name: Add all provisioned monitor instances with private IP to inventory
@@ -87,5 +87,5 @@
         name: "{{ item['openstack']['name'] }}"
         groups: ceph,"{{ osd_group_name }}"
         ansible_host: "{{ item['openstack']['private_v4'] }}"
-      with_items: "{{ ceph_mon_compute_instances.results }}"
+      with_items: "{{ ceph_osd_compute_instances.results }}"
       when: not "{{ os_use_public_IP }}"
