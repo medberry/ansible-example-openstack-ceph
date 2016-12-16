@@ -48,7 +48,7 @@
 
     - name: Wait a little while for instances to get out of BUILD state
       pause:
-        seconds: {{ os_build_delay }}
+        seconds: "{{ os_build_delay }}"
 
     - name: Wait for all OSD compute instances to be ready
       os_server:
