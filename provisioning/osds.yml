@@ -76,12 +76,12 @@
         groups: "ceph,{{ osd_group_name }}"
         ansible_host: "{{ item['openstack']['public_v4'] }}"
       with_items: "{{ ceph_osd_compute_instances.results }}"
-      when: "{{ os_use_public_IP }}"
+      when: os_use_public_IP
 
     - name: Add all provisioned OSD instances with private IP to inventory
       add_host:
         name: "{{ item['openstack']['name'] }}"
-        groups: ceph,"{{ osd_group_name }}"
+        groups: "ceph,{{ osd_group_name }}"
         ansible_host: "{{ item['openstack']['private_v4'] }}"
       with_items: "{{ ceph_osd_compute_instances.results }}"
-      when: not "{{ os_use_public_IP }}"
+      when: not os_use_public_IP
