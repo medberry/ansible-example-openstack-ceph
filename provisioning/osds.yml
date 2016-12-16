@@ -70,10 +70,6 @@
       with_sequence: start=0 end={{ osd_count - 1 }} stride=1
       register: ceph_osd_compute_instances
 
-    - name: Print OSD Host information we have
-      debug:
-        var: ceph_osd_compute_instances.results
-
     - name: Add all provisioned monitor instances with public IP to inventory
       add_host:
         name: "{{ item['openstack']['name'] }}"
