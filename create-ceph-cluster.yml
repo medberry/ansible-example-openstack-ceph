@@ -55,14 +55,14 @@
     - ceph.ceph-common
 
 - name: Configure all monitors
-  hosts: "{{ mon_group_name }}"
+  hosts: cephmons
   remote_user: cloud-user
   become: yes
   roles:
     - ceph.ceph-mon
 
 - name: Configure all object storage daemons
-  hosts: "{{ osd_group_name }}"
+  hosts: cephosds
   remote_user: cloud-user
   become: yes
   roles:
