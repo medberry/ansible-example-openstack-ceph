@@ -66,7 +66,7 @@
         msg: "{{ item }}"
       with_items: "{{ groups['mon_group_name'] }}"
 
-    - show all the hosts in the osd_group_name group
+    - name: show all the hosts in the osd_group_name group
       debug:
         msg: "{{ item }}"
       with_items: "{{ groups['osd_group_name'] }}"
